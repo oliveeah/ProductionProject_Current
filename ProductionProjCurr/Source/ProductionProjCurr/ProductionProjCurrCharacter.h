@@ -30,7 +30,12 @@ class AProductionProjCurrCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
-	
+
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* ToolOneMesh;
+
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* ToolTwoMesh;
 protected:
 
 	/** Jump Input Action */
@@ -106,5 +111,7 @@ public:
 
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+
 };
 
