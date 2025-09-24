@@ -31,11 +31,7 @@ class AProductionProjCurrCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* ToolOneMesh;
 
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* ToolTwoMesh;
 protected:
 
 	/** Jump Input Action */
@@ -67,10 +63,14 @@ public:
 	/** Constructor */
 	AProductionProjCurrCharacter();	
 
+
 protected:
 
 	/** Initialize input action bindings */
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+
+
 
 protected:
 
@@ -112,6 +112,18 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+	UPROPERTY(VisibleAnywhere, Category = "Mesh")
+	class UStaticMeshComponent* axeMesh;
+
+	UPROPERTY(VisibleAnywhere, Category = "Mesh")
+	class UStaticMeshComponent* pickaxeMesh;
+
+	enum handState
+	{
+		unequipped, axe, pickaxe
+	};
+
+	void toggleHandState()
 
 };
 

@@ -47,13 +47,29 @@ AProductionProjCurrCharacter::AProductionProjCurrCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
-	ToolOneMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("meshone"));
-	ToolOneMesh->SetupAttachment(RootComponent);
+	axeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AXEMESH"));
 
+	if (axeMesh)
+	{
+		axeMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("axesocket"));
+		axeMesh->SetVisibility(false);
+	}
+
+	pickaxeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PICKAXEMESH"));
+
+	if (pickaxeMesh)
+	{
+		pickaxeMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("pickaxesocket"));
+		axeMesh->SetVisibility(false);
+
+	}
+
+	
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
+
 
 void AProductionProjCurrCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -80,6 +96,8 @@ void AProductionProjCurrCharacter::SetupPlayerInputComponent(UInputComponent* Pl
 		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	}
 }
+
+
 
 void AProductionProjCurrCharacter::Move(const FInputActionValue& Value)
 {
@@ -143,6 +161,7 @@ void AProductionProjCurrCharacter::DoJumpEnd()
 
 void AProductionProjCurrCharacter::ToolOnePressed()
 {
+
 	UE_LOG(LogTemp, Warning, TEXT("1 pressed"));
 
 }
@@ -151,4 +170,8 @@ void AProductionProjCurrCharacter::ToolTwoPressed()
 {
 	UE_LOG(LogTemp, Warning, TEXT("2 pressed"));
 
+}
+
+void AProductionProjCurrCharacter::toggleHandState()
+{
 }
