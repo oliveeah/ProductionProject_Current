@@ -123,7 +123,7 @@ public:
 		unequipped, axe, pickaxe
 	};
 
-	void toggleHandState()
+	void toggleHandState(handState state);
 
 };
 

@@ -64,7 +64,7 @@ AProductionProjCurrCharacter::AProductionProjCurrCharacter()
 
 	}
 
-	
+	handState::unequipped;
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -161,17 +161,31 @@ void AProductionProjCurrCharacter::DoJumpEnd()
 
 void AProductionProjCurrCharacter::ToolOnePressed()
 {
-
-	UE_LOG(LogTemp, Warning, TEXT("1 pressed"));
+	toggleHandState(handState::axe);
+	UE_LOG(LogTemp, Warning, TEXT("axe pressed"));
 
 }
 
 void AProductionProjCurrCharacter::ToolTwoPressed()
 {
-	UE_LOG(LogTemp, Warning, TEXT("2 pressed"));
+	toggleHandState(handState::pickaxe);
+	UE_LOG(LogTemp, Warning, TEXT("pickaxe pressed"));
 
 }
 
-void AProductionProjCurrCharacter::toggleHandState()
+void AProductionProjCurrCharacter::toggleHandState(handState state)
 {
+	switch(state)
+	{
+		case(axe):
+			axeMesh->SetVisibility(true);
+			pickaxeMesh->SetVisibility(false);
+		break;
+
+		case(pickaxe):
+			axeMesh->SetVisibility(false);
+			pickaxeMesh->SetVisibility(true);
+		break;
+
+	}
 }
