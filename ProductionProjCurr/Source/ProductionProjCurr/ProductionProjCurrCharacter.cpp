@@ -66,6 +66,10 @@ void AProductionProjCurrCharacter::SetupPlayerInputComponent(UInputComponent* Pl
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AProductionProjCurrCharacter::Look);
+
+		//tools
+		EnhancedInputComponent->BindAction(toolOneAction, ETriggerEvent::Triggered, this, &AProductionProjCurrCharacter::ToolOnePressed);
+		EnhancedInputComponent->BindAction(toolTwoAction, ETriggerEvent::Triggered, this, &AProductionProjCurrCharacter::ToolTwoPressed);
 	}
 	else
 	{
@@ -131,4 +135,16 @@ void AProductionProjCurrCharacter::DoJumpEnd()
 {
 	// signal the character to stop jumping
 	StopJumping();
+}
+
+void AProductionProjCurrCharacter::ToolOnePressed()
+{
+	UE_LOG(LogTemp, Warning, TEXT("1 pressed"));
+
+}
+
+void AProductionProjCurrCharacter::ToolTwoPressed()
+{
+	UE_LOG(LogTemp, Warning, TEXT("2 pressed"));
+
 }

@@ -49,6 +49,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
 	UInputAction* MouseLookAction;
 
+	//tool1//
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* toolOneAction;
+
+	//tool2//
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* toolTwoAction;
+
 public:
 
 	/** Constructor */
@@ -84,6 +92,12 @@ public:
 	/** Handles jump pressed inputs from either controls or UI interfaces */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoJumpEnd();
+
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	virtual void ToolOnePressed();
+
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	virtual void ToolTwoPressed();
 
 public:
 
