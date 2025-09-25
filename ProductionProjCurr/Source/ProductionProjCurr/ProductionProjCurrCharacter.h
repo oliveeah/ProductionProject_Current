@@ -104,6 +104,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	virtual void ToolTwoPressed();
 
+
+
+
 public:
 
 	/** Returns CameraBoom subobject **/
@@ -125,5 +128,7 @@ public:
 
 	void toggleHandState(handState state);
 
+	bool axeIsHeld = false;
+	bool pickaxeIsHeld = false;
 };
 

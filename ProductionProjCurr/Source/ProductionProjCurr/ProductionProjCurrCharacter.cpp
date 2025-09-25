@@ -88,8 +88,8 @@ void AProductionProjCurrCharacter::SetupPlayerInputComponent(UInputComponent* Pl
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AProductionProjCurrCharacter::Look);
 
 		//tools
-		EnhancedInputComponent->BindAction(toolOneAction, ETriggerEvent::Triggered, this, &AProductionProjCurrCharacter::ToolOnePressed);
-		EnhancedInputComponent->BindAction(toolTwoAction, ETriggerEvent::Triggered, this, &AProductionProjCurrCharacter::ToolTwoPressed);
+		EnhancedInputComponent->BindAction(toolOneAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::ToolOnePressed);
+		EnhancedInputComponent->BindAction(toolTwoAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::ToolTwoPressed);
 	}
 	else
 	{
@@ -162,30 +162,67 @@ void AProductionProjCurrCharacter::DoJumpEnd()
 void AProductionProjCurrCharacter::ToolOnePressed()
 {
 	toggleHandState(handState::axe);
-	UE_LOG(LogTemp, Warning, TEXT("axe pressed"));
 
 }
 
 void AProductionProjCurrCharacter::ToolTwoPressed()
 {
 	toggleHandState(handState::pickaxe);
-	UE_LOG(LogTemp, Warning, TEXT("pickaxe pressed"));
 
 }
 
+
+
+
 void AProductionProjCurrCharacter::toggleHandState(handState state)
 {
+
 	switch(state)
 	{
+
 		case(axe):
-			axeMesh->SetVisibility(true);
-			pickaxeMesh->SetVisibility(false);
+			if (axeIsHeld)
+			{
+				toggleHandState(handState::unequipped);
+			}
+			else
+			{
+				axeMesh->SetVisibility(true);
+				pickaxeMesh->SetVisibility(false);
+				axeIsHeld = true;
+				pickaxeIsHeld = false;
+				UE_LOG(LogTemp, Warning, TEXT("holding axe"));
+
+			}
+		
 		break;
 
 		case(pickaxe):
+			if (pickaxeIsHeld)
+			{
+				toggleHandState(handState::unequipped);
+			}
+			else
+			{
+				axeMesh->SetVisibility(false);
+				pickaxeMesh->SetVisibility(true);
+				axeIsHeld = false;
+				pickaxeIsHeld = true;
+				UE_LOG(LogTemp, Warning, TEXT("holding pickaxe"));
+
+			}
+
+		break;
+		case(unequipped):
 			axeMesh->SetVisibility(false);
-			pickaxeMesh->SetVisibility(true);
+			pickaxeMesh->SetVisibility(false);
+			axeIsHeld = false;
+			pickaxeIsHeld = false;
+			UE_LOG(LogTemp, Warning, TEXT("holding nothing"));
+
 		break;
 
 	}
+
+
 }
