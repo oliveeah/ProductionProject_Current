@@ -58,6 +58,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* toolTwoAction;
 
+	//use//
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* useAction;
+
 public:
 
 	/** Constructor */
@@ -104,6 +108,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	virtual void ToolTwoPressed();
 
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	virtual void UsePressed();
+
 
 
 
@@ -130,5 +137,8 @@ public:
 
 	bool axeIsHeld = false;
 	bool pickaxeIsHeld = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)	
+	UAnimMontage* swingMontage;
 };
 

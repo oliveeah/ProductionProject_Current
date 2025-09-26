@@ -90,6 +90,10 @@ void AProductionProjCurrCharacter::SetupPlayerInputComponent(UInputComponent* Pl
 		//tools
 		EnhancedInputComponent->BindAction(toolOneAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::ToolOnePressed);
 		EnhancedInputComponent->BindAction(toolTwoAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::ToolTwoPressed);
+
+		//use
+		EnhancedInputComponent->BindAction(useAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::UsePressed);
+
 	}
 	else
 	{
@@ -159,6 +163,10 @@ void AProductionProjCurrCharacter::DoJumpEnd()
 	StopJumping();
 }
 
+/// <summary>
+/// HAND STATE STUFF 
+/// </summary>
+
 void AProductionProjCurrCharacter::ToolOnePressed()
 {
 	toggleHandState(handState::axe);
@@ -171,8 +179,20 @@ void AProductionProjCurrCharacter::ToolTwoPressed()
 
 }
 
+/// <summary>
+/// HAND STATE STUFF 
+/// </summary>
 
+void AProductionProjCurrCharacter::UsePressed()
+{
+	UE_LOG(LogTemp, Display, TEXT("swing"));
 
+	if (swingMontage && GetMesh() && GetMesh()->GetAnimInstance())
+	{
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		AnimInstance->Montage_Play(swingMontage);
+	}
+}
 
 void AProductionProjCurrCharacter::toggleHandState(handState state)
 {
