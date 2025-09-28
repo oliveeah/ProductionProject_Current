@@ -137,6 +137,7 @@ public:
 
 	bool axeIsHeld = false;
 	bool pickaxeIsHeld = false;
+	bool noItemIsHeld = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)	
 	UAnimMontage* swingMontage;

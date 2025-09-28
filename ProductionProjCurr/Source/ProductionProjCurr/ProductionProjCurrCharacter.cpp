@@ -51,7 +51,7 @@ AProductionProjCurrCharacter::AProductionProjCurrCharacter()
 
 	if (axeMesh)
 	{
-		axeMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("axesocket"));
+		axeMesh->SetupAttachment(GetMesh(), TEXT("axesocket"));
 		axeMesh->SetVisibility(false);
 	}
 
@@ -59,7 +59,8 @@ AProductionProjCurrCharacter::AProductionProjCurrCharacter()
 
 	if (pickaxeMesh)
 	{
-		pickaxeMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("pickaxesocket"));
+		pickaxeMesh->SetupAttachment(GetMesh(), TEXT("pickaxesocket"));
+
 		axeMesh->SetVisibility(false);
 
 	}
@@ -169,13 +170,29 @@ void AProductionProjCurrCharacter::DoJumpEnd()
 
 void AProductionProjCurrCharacter::ToolOnePressed()
 {
-	toggleHandState(handState::axe);
+	if (axeIsHeld)
+	{
+		toggleHandState(handState::unequipped);
+	}
+	else
+	{
+		toggleHandState(handState::axe);
+
+	}
 
 }
 
 void AProductionProjCurrCharacter::ToolTwoPressed()
 {
-	toggleHandState(handState::pickaxe);
+	if (pickaxeIsHeld)
+	{
+		toggleHandState(handState::unequipped);
+	}
+	else
+	{
+		toggleHandState(handState::pickaxe);
+
+	}
 
 }
 
@@ -187,7 +204,7 @@ void AProductionProjCurrCharacter::UsePressed()
 {
 	UE_LOG(LogTemp, Display, TEXT("swing"));
 
-	if (swingMontage && GetMesh() && GetMesh()->GetAnimInstance())
+	if (swingMontage && GetMesh() && GetMesh()->GetAnimInstance() && !noItemIsHeld)
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		AnimInstance->Montage_Play(swingMontage);
@@ -201,36 +218,27 @@ void AProductionProjCurrCharacter::toggleHandState(handState state)
 	{
 
 		case(axe):
-			if (axeIsHeld)
-			{
-				toggleHandState(handState::unequipped);
-			}
-			else
-			{
 				axeMesh->SetVisibility(true);
 				pickaxeMesh->SetVisibility(false);
 				axeIsHeld = true;
 				pickaxeIsHeld = false;
+				noItemIsHeld = false;
+
 				UE_LOG(LogTemp, Warning, TEXT("holding axe"));
 
-			}
+			
 		
 		break;
 
 		case(pickaxe):
-			if (pickaxeIsHeld)
-			{
-				toggleHandState(handState::unequipped);
-			}
-			else
-			{
 				axeMesh->SetVisibility(false);
 				pickaxeMesh->SetVisibility(true);
 				axeIsHeld = false;
 				pickaxeIsHeld = true;
 				UE_LOG(LogTemp, Warning, TEXT("holding pickaxe"));
+				noItemIsHeld = false;
 
-			}
+			
 
 		break;
 		case(unequipped):
@@ -238,11 +246,16 @@ void AProductionProjCurrCharacter::toggleHandState(handState state)
 			pickaxeMesh->SetVisibility(false);
 			axeIsHeld = false;
 			pickaxeIsHeld = false;
+			noItemIsHeld = true;
+
 			UE_LOG(LogTemp, Warning, TEXT("holding nothing"));
 
 		break;
 
 	}
+
+
+
 
 
 }
