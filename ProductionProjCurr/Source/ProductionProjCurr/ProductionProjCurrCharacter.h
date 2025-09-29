@@ -62,6 +62,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* useAction;
 
+	//toggle build
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* toggleBuildAction;
+
 public:
 
 	/** Constructor */
@@ -111,6 +115,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	virtual void UsePressed();
 
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	virtual void toggleBuildModeFn();
+
 
 
 
@@ -128,9 +135,12 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Mesh")
 	class UStaticMeshComponent* pickaxeMesh;
 
+	UPROPERTY(VisibleAnywhere, Category = "Mesh")
+	class UStaticMeshComponent* hammerMesh;
+
 	enum handState
 	{
-		unequipped, axe, pickaxe
+		unequipped, axe, pickaxe, building,
 	};
 
 	void toggleHandState(handState state);
@@ -138,6 +148,7 @@ public:
 	bool axeIsHeld = false;
 	bool pickaxeIsHeld = false;
 	bool noItemIsHeld = true;
+	bool isBuilding = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)	
 	UAnimMontage* swingMontage;

@@ -65,6 +65,14 @@ AProductionProjCurrCharacter::AProductionProjCurrCharacter()
 
 	}
 
+	hammerMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HAMMERMESH"));
+
+	if (hammerMesh)
+	{
+		hammerMesh->SetupAttachment(GetMesh(), TEXT("hammersocket"));
+		hammerMesh->SetVisibility(false);
+	}
+
 	handState::unequipped;
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
@@ -94,6 +102,10 @@ void AProductionProjCurrCharacter::SetupPlayerInputComponent(UInputComponent* Pl
 
 		//use
 		EnhancedInputComponent->BindAction(useAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::UsePressed);
+
+		//toggle build
+		EnhancedInputComponent->BindAction(toggleBuildAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::toggleBuildModeFn);
+
 
 	}
 	else
@@ -170,6 +182,7 @@ void AProductionProjCurrCharacter::DoJumpEnd()
 
 void AProductionProjCurrCharacter::ToolOnePressed()
 {
+	if (isBuilding) { return; }
 	if (axeIsHeld)
 	{
 		toggleHandState(handState::unequipped);
@@ -184,6 +197,8 @@ void AProductionProjCurrCharacter::ToolOnePressed()
 
 void AProductionProjCurrCharacter::ToolTwoPressed()
 {
+	if (isBuilding) { return; }
+
 	if (pickaxeIsHeld)
 	{
 		toggleHandState(handState::unequipped);
@@ -209,6 +224,23 @@ void AProductionProjCurrCharacter::UsePressed()
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		AnimInstance->Montage_Play(swingMontage);
 	}
+}
+
+void AProductionProjCurrCharacter::toggleBuildModeFn()
+{
+	isBuilding = !isBuilding; 
+	
+	if (isBuilding)
+	{
+		UE_LOG(LogTemp, Display, TEXT("buliding"));
+
+	}
+	else
+	{
+		UE_LOG(LogTemp, Display, TEXT("not building"));
+
+	}
+	isBuilding ? toggleHandState(handState::building) : toggleHandState(handState::unequipped);
 }
 
 void AProductionProjCurrCharacter::toggleHandState(handState state)
@@ -244,6 +276,8 @@ void AProductionProjCurrCharacter::toggleHandState(handState state)
 		case(unequipped):
 			axeMesh->SetVisibility(false);
 			pickaxeMesh->SetVisibility(false);
+			hammerMesh->SetVisibility(false);
+
 			axeIsHeld = false;
 			pickaxeIsHeld = false;
 			noItemIsHeld = true;
@@ -251,6 +285,17 @@ void AProductionProjCurrCharacter::toggleHandState(handState state)
 			UE_LOG(LogTemp, Warning, TEXT("holding nothing"));
 
 		break;
+
+		case(building):
+			UE_LOG(LogTemp, Display, TEXT("buliding case called"));
+			hammerMesh->SetVisibility(true);
+			axeMesh->SetVisibility(false);
+			pickaxeMesh->SetVisibility(false);
+			axeIsHeld = false;
+			pickaxeIsHeld = false;
+			noItemIsHeld = false;
+
+			break;
 
 	}
 
