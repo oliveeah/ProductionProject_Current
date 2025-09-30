@@ -1,8 +1,25 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ProductionProjCurrGameMode.h"
+#include "UObject/ConstructorHelpers.h"
+#include "GameFramework/Actor.h"
+
+
+void AProductionProjCurrGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (!GEngine)
+	{
+		return;
+	}
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("GameMode running. GEngine Too!"));
+
+}
 
 AProductionProjCurrGameMode::AProductionProjCurrGameMode()
 {
-	// stub
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/MyStuff/Blueprints/Player/BP_Mushroom.BP_Mushroom"));
+	DefaultPawnClass = PlayerPawnClassFinder.Class;
 }
