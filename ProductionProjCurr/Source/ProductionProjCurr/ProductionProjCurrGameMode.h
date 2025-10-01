@@ -23,6 +23,11 @@ public:
 	
 	/** Constructor */
 	AProductionProjCurrGameMode();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<class UUserWidget> widgetPtr;
+
+	UUserWidget* currentWidget;
 };
 
 
