@@ -3,7 +3,6 @@
 #include "ProductionProjCurrGameMode.h"
 #include "UObject/ConstructorHelpers.h"
 #include "GameFramework/Actor.h"
-#include "Blueprint/UserWidget.h"
 
 
 void AProductionProjCurrGameMode::BeginPlay()
@@ -17,15 +16,6 @@ void AProductionProjCurrGameMode::BeginPlay()
 
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("GameMode running. GEngine Too!"));
 
-	if (widgetPtr)
-	{
-		currentWidget = CreateWidget(GetWorld(), widgetPtr);
-
-	}
-	if (currentWidget)
-	{
-		currentWidget->AddToViewport();
-	}
 
 }
 

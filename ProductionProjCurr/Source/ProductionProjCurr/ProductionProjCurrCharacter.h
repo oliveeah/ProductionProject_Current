@@ -77,6 +77,7 @@ protected:
 	/** Initialize input action bindings */
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void BeginPlay() override;
 
 
 
@@ -152,5 +153,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)	
 	UAnimMontage* swingMontage;
+
+	UPROPERTY()
+	UUserWidget* myWidget;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<UUserWidget> myWidgetClass;
 };
 

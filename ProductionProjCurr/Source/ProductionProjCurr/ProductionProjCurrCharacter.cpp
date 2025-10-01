@@ -10,6 +10,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Blueprint/UserWidget.h"
+
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -76,10 +78,25 @@ AProductionProjCurrCharacter::AProductionProjCurrCharacter()
 	handState::unequipped;
 
 
+
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
+void AProductionProjCurrCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (!IsValid(myWidget) && myWidgetClass)
+	{
+		myWidget = CreateWidget<UUserWidget>(GetWorld()->GetFirstPlayerController(), myWidgetClass);
+	}
+
+	if (IsValid(myWidget))
+	{
+		myWidget->AddToViewport();
+	}
+}
 
 void AProductionProjCurrCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -114,6 +131,8 @@ void AProductionProjCurrCharacter::SetupPlayerInputComponent(UInputComponent* Pl
 		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	}
 }
+
+
 
 
 
