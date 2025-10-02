@@ -158,5 +158,8 @@ public:
 	UUserWidget* myWidget;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TSubclassOf<UUserWidget> myWidgetClass;
+
+	void toggleBuildWidget(bool isbuilding);
+
 };
 

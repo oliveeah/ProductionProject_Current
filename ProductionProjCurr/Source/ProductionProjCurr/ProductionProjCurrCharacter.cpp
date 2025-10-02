@@ -92,10 +92,10 @@ void AProductionProjCurrCharacter::BeginPlay()
 		myWidget = CreateWidget<UUserWidget>(GetWorld()->GetFirstPlayerController(), myWidgetClass);
 	}
 
-	if (IsValid(myWidget))
-	{
-		myWidget->AddToViewport();
-	}
+	//if (IsValid(myWidget))
+	//{
+	//	myWidget->AddToViewport();
+	//}
 }
 
 void AProductionProjCurrCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -261,6 +261,9 @@ void AProductionProjCurrCharacter::toggleBuildModeFn()
 
 	}
 	isBuilding ? toggleHandState(handState::building) : toggleHandState(handState::unequipped);
+	isBuilding ? toggleBuildWidget(true) : toggleBuildWidget(false);
+
+
 }
 
 void AProductionProjCurrCharacter::toggleHandState(handState state)
@@ -314,13 +317,20 @@ void AProductionProjCurrCharacter::toggleHandState(handState state)
 			axeIsHeld = false;
 			pickaxeIsHeld = false;
 			noItemIsHeld = false;
-
 			break;
 
 	}
 
 
+	
 
 
+}
 
+void AProductionProjCurrCharacter::toggleBuildWidget(bool _isBuilding)
+{
+	if (IsValid(myWidget))
+	{
+		_isBuilding ? myWidget->AddToViewport() : myWidget->RemoveFromParent();
+	}
 }
