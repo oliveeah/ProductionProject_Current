@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -240,7 +241,7 @@ void AProductionProjCurrCharacter::UsePressed()
 {
 	UE_LOG(LogTemp, Display, TEXT("swing"));
 
-	if (swingMontage && GetMesh() && GetMesh()->GetAnimInstance() && !noItemIsHeld)
+	if (swingMontage && GetMesh() && GetMesh()->GetAnimInstance() && !noItemIsHeld && !isBuilding)
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		AnimInstance->Montage_Play(swingMontage);
@@ -332,6 +333,18 @@ void AProductionProjCurrCharacter::toggleBuildWidget(bool _isBuilding)
 {
 	if (IsValid(myWidget))
 	{
-		_isBuilding ? myWidget->AddToViewport() : myWidget->RemoveFromParent();
+		APlayerController* playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
+		if (_isBuilding)
+		{
+			myWidget->AddToViewport();
+			playerController->bShowMouseCursor = true; 
+		}
+		else
+		{
+			myWidget->RemoveFromParent();
+			playerController->bShowMouseCursor = false;
+
+		}
 	}
 }
