@@ -100,6 +100,14 @@ void AProductionProjCurrCharacter::BeginPlay()
 	//}
 }
 
+void AProductionProjCurrCharacter::Tick(float DeltaTime)
+{
+	FVelocity = RootComponent->GetComponentVelocity();
+
+}
+
+
+
 void AProductionProjCurrCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	// Set up action bindings
@@ -111,10 +119,6 @@ void AProductionProjCurrCharacter::SetupPlayerInputComponent(UInputComponent* Pl
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AProductionProjCurrCharacter::Move);
-		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &AProductionProjCurrCharacter::Look);
-
-		// Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AProductionProjCurrCharacter::Look);
 
 		//tools
 		EnhancedInputComponent->BindAction(toolOneAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::ToolOnePressed);
@@ -147,14 +151,6 @@ void AProductionProjCurrCharacter::Move(const FInputActionValue& Value)
 	DoMove(MovementVector.X, MovementVector.Y);
 }
 
-void AProductionProjCurrCharacter::Look(const FInputActionValue& Value)
-{
-	// input is a Vector2D
-	FVector2D LookAxisVector = Value.Get<FVector2D>();
-
-	// route the input
-	//DoLook(LookAxisVector.X, LookAxisVector.Y);
-}
 
 void AProductionProjCurrCharacter::DoMove(float Right, float Forward)
 {
@@ -173,18 +169,13 @@ void AProductionProjCurrCharacter::DoMove(float Right, float Forward)
 		// add movement 
 		AddMovementInput(ForwardDirection, Forward);
 		AddMovementInput(RightDirection, Right);
+
+
+	
+
 	}
 }
 
-void AProductionProjCurrCharacter::DoLook(float Yaw, float Pitch)
-{
-	if (GetController() != nullptr)
-	{
-		// add yaw and pitch input to controller
-		AddControllerYawInput(Yaw);
-		AddControllerPitchInput(Pitch);
-	}
-}
 
 void AProductionProjCurrCharacter::DoJumpStart()
 {
@@ -198,6 +189,8 @@ void AProductionProjCurrCharacter::DoJumpEnd()
 	StopJumping();
 }
 
+
+//////////////////////////////////////////
 /// <summary>
 /// HAND STATE STUFF 
 /// </summary>

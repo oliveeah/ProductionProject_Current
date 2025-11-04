@@ -42,14 +42,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
 	UInputAction* MoveAction;
 
-	/** Look Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
-	UInputAction* LookAction;
-
-	/** Mouse Look Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
-	UInputAction* MouseLookAction;
-
 	//tool1//
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* toolOneAction;
@@ -79,7 +71,7 @@ protected:
 
 	virtual void BeginPlay() override;
 
-
+	virtual void Tick(float DeltaTime) override;
 
 protected:
 
@@ -94,10 +86,6 @@ public:
 	/** Handles move inputs from either controls or UI interfaces */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoMove(float Right, float Forward);
-
-	/** Handles look inputs from either controls or UI interfaces */
-	UFUNCTION(BlueprintCallable, Category="Input")
-	virtual void DoLook(float Yaw, float Pitch);
 
 	/** Handles jump pressed inputs from either controls or UI interfaces */
 	UFUNCTION(BlueprintCallable, Category="Input")
@@ -161,5 +149,9 @@ public:
 
 	void toggleBuildWidget(bool isbuilding);
 
+	public:
+
+		UPROPERTY(BlueprintReadOnly)
+		FVector FVelocity;
 };
 
