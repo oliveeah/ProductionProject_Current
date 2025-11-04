@@ -18,6 +18,11 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 AProductionProjCurrCharacter::AProductionProjCurrCharacter()
 {
+	APlayerController* myController = GetWorld()->GetFirstPlayerController();
+	myController->bShowMouseCursor = true;
+	myController->bEnableClickEvents = true;
+	myController->bEnableMouseOverEvents = true;
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 		
