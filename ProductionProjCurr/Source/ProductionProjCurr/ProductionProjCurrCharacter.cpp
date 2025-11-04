@@ -18,10 +18,6 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 AProductionProjCurrCharacter::AProductionProjCurrCharacter()
 {
-	APlayerController* myController = GetWorld()->GetFirstPlayerController();
-	myController->bShowMouseCursor = true;
-	myController->bEnableClickEvents = true;
-	myController->bEnableMouseOverEvents = true;
 
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -119,8 +115,8 @@ void AProductionProjCurrCharacter::SetupPlayerInputComponent(UInputComponent* Pl
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
 		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::DoJumpStart);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AProductionProjCurrCharacter::DoJumpEnd);
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AProductionProjCurrCharacter::Move);
@@ -156,6 +152,15 @@ void AProductionProjCurrCharacter::Move(const FInputActionValue& Value)
 	DoMove(MovementVector.X, MovementVector.Y);
 }
 
+void AProductionProjCurrCharacter::Landed(const FHitResult& Hit)
+{
+	bIsJumping = false;
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Black, FString::Printf(TEXT("Bool: %s"), bIsJumping ? TEXT("true") : TEXT("false")));
+	}
+}
+
 
 void AProductionProjCurrCharacter::DoMove(float Right, float Forward)
 {
@@ -185,6 +190,12 @@ void AProductionProjCurrCharacter::DoMove(float Right, float Forward)
 void AProductionProjCurrCharacter::DoJumpStart()
 {
 	// signal the character to jump
+
+	bIsJumping = true;
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Black, FString::Printf(TEXT("Bool: %s"), bIsJumping ? TEXT("true") : TEXT("false")));
+	}
 	Jump();
 }
 
@@ -192,6 +203,7 @@ void AProductionProjCurrCharacter::DoJumpEnd()
 {
 	// signal the character to stop jumping
 	StopJumping();
+
 }
 
 
