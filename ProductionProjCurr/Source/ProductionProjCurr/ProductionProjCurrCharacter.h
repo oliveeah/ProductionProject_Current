@@ -83,6 +83,9 @@ protected:
 
 	virtual void Landed(const FHitResult& Hit) override;
 
+	virtual void NotifyJumpApex() override;
+
+
 
 public:
 
@@ -162,5 +165,10 @@ public:
 
 		UPROPERTY(BlueprintReadOnly)
 		bool bIsJumping = false;
+
+		UPROPERTY(BlueprintReadOnly)
+		bool bIsFalling = false;
+
+
 };
 

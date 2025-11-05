@@ -39,6 +39,7 @@ AProductionProjCurrCharacter::AProductionProjCurrCharacter()
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
+	GetCharacterMovement()->bNotifyApex = true;
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -94,6 +95,7 @@ void AProductionProjCurrCharacter::BeginPlay()
 	{
 		myWidget = CreateWidget<UUserWidget>(GetWorld()->GetFirstPlayerController(), myWidgetClass);
 	}
+	GetCharacterMovement()->GetCurrentAcceleration();
 
 	//if (IsValid(myWidget))
 	//{
@@ -104,7 +106,6 @@ void AProductionProjCurrCharacter::BeginPlay()
 void AProductionProjCurrCharacter::Tick(float DeltaTime)
 {
 	FVelocity = RootComponent->GetComponentVelocity();
-
 }
 
 
@@ -155,11 +156,27 @@ void AProductionProjCurrCharacter::Move(const FInputActionValue& Value)
 void AProductionProjCurrCharacter::Landed(const FHitResult& Hit)
 {
 	bIsJumping = false;
+	bIsFalling = false;
+
+
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Black, FString::Printf(TEXT("Bool: %s"), bIsJumping ? TEXT("true") : TEXT("false")));
 	}
 }
+
+void AProductionProjCurrCharacter::NotifyJumpApex()
+{
+	bIsFalling = true;
+
+	Super::NotifyJumpApex();
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("jump apex reached")));
+	}
+}
+
+
 
 
 void AProductionProjCurrCharacter::DoMove(float Right, float Forward)
@@ -196,6 +213,7 @@ void AProductionProjCurrCharacter::DoJumpStart()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Black, FString::Printf(TEXT("Bool: %s"), bIsJumping ? TEXT("true") : TEXT("false")));
 	}
+	GetCharacterMovement()->bNotifyApex = true;
 	Jump();
 }
 
