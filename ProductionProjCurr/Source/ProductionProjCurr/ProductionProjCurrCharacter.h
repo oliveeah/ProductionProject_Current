@@ -168,6 +168,9 @@ public:
 
 		UPROPERTY(BlueprintReadOnly)
 		bool bIsFalling = false;
+	public:
+		
+
 
 
 };

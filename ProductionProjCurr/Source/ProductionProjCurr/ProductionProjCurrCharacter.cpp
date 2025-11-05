@@ -13,7 +13,6 @@
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 
-
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 AProductionProjCurrCharacter::AProductionProjCurrCharacter()
