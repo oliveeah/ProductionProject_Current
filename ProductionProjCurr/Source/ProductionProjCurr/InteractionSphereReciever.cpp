@@ -22,9 +22,26 @@ void UInteractionSphereReciever::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	AActor* owningActor = GetOwner();
+
+	boxCollider = NewObject<UBoxComponent>(owningActor, UBoxComponent::StaticClass(), TEXT("InteractionBox"));
+
+	if (!boxCollider) return;
+
+	boxCollider->AttachToComponent(owningActor->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+
+	boxCollider->RegisterComponent();
+
 	boxCollider->OnComponentBeginOverlap.AddDynamic(this, &UInteractionSphereReciever::interactionSphere_OverlapBegin);
 	boxCollider->OnComponentEndOverlap.AddDynamic(this, &UInteractionSphereReciever::interactionSphere_OverlapEnd);
+
+	boxCollider->SetActive(true);
+
+	UE_LOG(LogTemp, Warning, TEXT("InteractionReceiver: %s has box: %s, registered: %d, active: %d"),
+		*GetOwner()->GetName(),
+		*boxCollider->GetName(),
+		boxCollider->IsRegistered(),
+		boxCollider->IsActive());
 }
 
 
