@@ -103,6 +103,11 @@ void AProductionProjCurrCharacter::BeginPlay()
 	//{
 	//	myWidget->AddToViewport();
 	//}
+
+	if (GetClass()->ImplementsInterface(UInteraction_Interface::StaticClass()))
+	{
+		UE_LOG(LogTemp, Log, TEXT("This object implements MyInterface!"));
+	}
 }
 
 void AProductionProjCurrCharacter::Tick(float DeltaTime)
