@@ -96,6 +96,9 @@ void AProductionProjCurrCharacter::BeginPlay()
 	}
 	GetCharacterMovement()->GetCurrentAcceleration();
 
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AProductionProjCurrCharacter::player_OverlapBegin);
+	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &AProductionProjCurrCharacter::player_OverlapEnd);
+
 	//if (IsValid(myWidget))
 	//{
 	//	myWidget->AddToViewport();
@@ -365,3 +368,31 @@ void AProductionProjCurrCharacter::toggleBuildWidget(bool _isBuilding)
 		}
 	}
 }
+
+void AProductionProjCurrCharacter::player_OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("player overlap event begin"));
+	if (OtherActor && OtherActor->GetClass()->ImplementsInterface(UInteraction_Interface::StaticClass()))
+	{
+		//UE_LOG(LogTemp, Display, TEXT("does implement"));        
+		IInteraction_Interface::Execute_Interact(OtherActor);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Display, TEXT("not called"));
+	}
+}
+
+void AProductionProjCurrCharacter::player_OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	UE_LOG(LogTemp, Warning, TEXT("player overlap event end"));
+
+}
+
+void AProductionProjCurrCharacter::Interact_Implementation()
+{
+	UE_LOG(LogTemp, Display, TEXT("player interface override"));
+
+}
+
+
