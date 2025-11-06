@@ -158,10 +158,6 @@ void AProductionProjCurrCharacter::Landed(const FHitResult& Hit)
 	bIsFalling = false;
 
 
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Black, FString::Printf(TEXT("Bool: %s"), bIsJumping ? TEXT("true") : TEXT("false")));
-	}
 }
 
 void AProductionProjCurrCharacter::NotifyJumpApex()
@@ -169,10 +165,7 @@ void AProductionProjCurrCharacter::NotifyJumpApex()
 	bIsFalling = true;
 
 	Super::NotifyJumpApex();
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("jump apex reached")));
-	}
+
 }
 
 
@@ -208,10 +201,7 @@ void AProductionProjCurrCharacter::DoJumpStart()
 	// signal the character to jump
 
 	bIsJumping = true;
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Black, FString::Printf(TEXT("Bool: %s"), bIsJumping ? TEXT("true") : TEXT("false")));
-	}
+
 	GetCharacterMovement()->bNotifyApex = true;
 	Jump();
 }

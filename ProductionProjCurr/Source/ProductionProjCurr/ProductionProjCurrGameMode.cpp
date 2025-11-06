@@ -9,12 +9,6 @@ void AProductionProjCurrGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!GEngine)
-	{
-		return;
-	}
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("GameMode running. GEngine Too!"));
 
 
 }

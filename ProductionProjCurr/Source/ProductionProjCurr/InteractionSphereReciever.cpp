@@ -14,7 +14,6 @@ UInteractionSphereReciever::UInteractionSphereReciever()
 	PrimaryComponentTick.bCanEverTick = false;
 
 	boxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("boxCollision"));
-	boxCollider->SetupAttachment(sceneRoot);
 }
 
 
@@ -24,7 +23,8 @@ void UInteractionSphereReciever::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+	boxCollider->OnComponentBeginOverlap.AddDynamic(this, &UInteractionSphereReciever::interactionSphere_OverlapBegin);
+	boxCollider->OnComponentEndOverlap.AddDynamic(this, &UInteractionSphereReciever::interactionSphere_OverlapEnd);
 }
 
 
@@ -38,10 +38,17 @@ void UInteractionSphereReciever::TickComponent(float DeltaTime, ELevelTick TickT
 
 void UInteractionSphereReciever::interactionSphere_OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("overlap begin (AC)!"));
+	}
 }
 
 void UInteractionSphereReciever::interactionSphere_OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("overlap end (AC)!"));
+	}
 }
 
