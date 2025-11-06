@@ -104,10 +104,10 @@ void AProductionProjCurrCharacter::BeginPlay()
 	//	myWidget->AddToViewport();
 	//}
 
-	if (GetClass()->ImplementsInterface(UInteraction_Interface::StaticClass()))
-	{
-		UE_LOG(LogTemp, Log, TEXT("This object implements MyInterface!"));
-	}
+	//if (GetClass()->ImplementsInterface(UInteraction_Interface::StaticClass()))
+	//{
+		//UE_LOG(LogTemp, Log, TEXT("This object implements MyInterface!"));
+	//}
 }
 
 void AProductionProjCurrCharacter::Tick(float DeltaTime)
@@ -377,10 +377,10 @@ void AProductionProjCurrCharacter::toggleBuildWidget(bool _isBuilding)
 void AProductionProjCurrCharacter::player_OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	UE_LOG(LogTemp, Warning, TEXT("player overlap event begin"));
-	if (OtherActor && OtherActor->GetClass()->ImplementsInterface(UInteraction_Interface::StaticClass()))
+	if (OtherActor && OtherActor->GetClass()->ImplementsInterface(UtestInterface::StaticClass()))
 	{
-		//UE_LOG(LogTemp, Display, TEXT("does implement"));        
-		IInteraction_Interface::Execute_Interact(OtherActor);
+		UE_LOG(LogTemp, Display, TEXT("does implement"));        
+		//ItestInterface::Execute_Interact(OtherActor);
 	}
 	else
 	{

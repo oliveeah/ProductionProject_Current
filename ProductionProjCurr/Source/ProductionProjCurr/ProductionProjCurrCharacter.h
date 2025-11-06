@@ -5,8 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
-#include "Interaction_Interface.h"
-
+#include "testInterface.h"
 #include "ProductionProjCurrCharacter.generated.h"
 
 class USpringArmComponent;
@@ -21,7 +20,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
  *  Implements a controllable orbiting camera
  */
 UCLASS(abstract)
-class AProductionProjCurrCharacter : public ACharacter, public IInteraction_Interface
+class AProductionProjCurrCharacter : public ACharacter, public ItestInterface
 {
 	GENERATED_BODY()
 
@@ -178,7 +177,7 @@ public:
 		UFUNCTION()
 		void player_OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-		virtual void Interact_Implementation() override;
+		void Interact_Implementation() override;
 
 };
 
