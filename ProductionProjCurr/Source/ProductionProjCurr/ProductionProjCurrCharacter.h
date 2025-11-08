@@ -59,6 +59,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* toggleBuildAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* interactAction;
+
 public:
 
 	/** Constructor */
@@ -115,6 +118,11 @@ public:
 	virtual void toggleBuildModeFn();
 
 
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	virtual void interactCallback();
+
+
+
 
 
 public:
@@ -169,6 +177,9 @@ public:
 
 		UPROPERTY(BlueprintReadOnly)
 		bool bIsFalling = false;
+
+		bool bIsOverlapping = false;
+		AActor* overlappingActor = nullptr;
 	public:
 		
 		UFUNCTION()
@@ -178,6 +189,7 @@ public:
 		void player_OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 		void Interact_Implementation() override;
+
 
 };
 

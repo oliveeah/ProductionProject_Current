@@ -138,6 +138,7 @@ void AProductionProjCurrCharacter::SetupPlayerInputComponent(UInputComponent* Pl
 
 		//toggle build
 		EnhancedInputComponent->BindAction(toggleBuildAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::toggleBuildModeFn);
+		EnhancedInputComponent->BindAction(interactAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::interactCallback);
 
 
 	}
@@ -293,6 +294,24 @@ void AProductionProjCurrCharacter::toggleBuildModeFn()
 
 }
 
+void AProductionProjCurrCharacter::interactCallback()
+{
+	if (overlappingActor)
+	{
+		if (overlappingActor && overlappingActor->GetClass()->ImplementsInterface(UtestInterface::StaticClass()))
+		{
+			//UE_LOG(LogTemp, Display, TEXT("does implement"));
+			ItestInterface::Execute_Interact(overlappingActor);//call interact on overlapping actor implementing interface
+			//ItestInterface::Execute_Interact(this); //call player interface if i need
+		}
+		else
+		{
+			//UE_LOG(LogTemp, Display, TEXT("doesnt implement"));
+		}
+	}
+
+}
+
 void AProductionProjCurrCharacter::toggleHandState(handState state)
 {
 
@@ -377,26 +396,20 @@ void AProductionProjCurrCharacter::toggleBuildWidget(bool _isBuilding)
 void AProductionProjCurrCharacter::player_OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	UE_LOG(LogTemp, Warning, TEXT("player overlap event begin"));
-	if (OtherActor && OtherActor->GetClass()->ImplementsInterface(UtestInterface::StaticClass()))
-	{
-		UE_LOG(LogTemp, Display, TEXT("does implement"));        
-		//ItestInterface::Execute_Interact(OtherActor);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Display, TEXT("not called"));
-	}
+	bIsOverlapping = true;
+	overlappingActor = OtherActor;
 }
 
 void AProductionProjCurrCharacter::player_OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	UE_LOG(LogTemp, Warning, TEXT("player overlap event end"));
-
+	bIsOverlapping = false;
+	overlappingActor = nullptr;
 }
 
 void AProductionProjCurrCharacter::Interact_Implementation()
 {
-	UE_LOG(LogTemp, Display, TEXT("player interface override"));
+	UE_LOG(LogTemp, Warning, TEXT("player interface implementation"));
 
 }
 
