@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "testInterface.h"
+#include "AToolBase.h"
 #include "ProductionProjCurrCharacter.generated.h"
 
 class USpringArmComponent;
@@ -29,7 +30,26 @@ class AProductionProjCurrCharacter : public ACharacter, public ItestInterface
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+public:
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tools")
+	TSubclassOf<AAToolBase> PickaxeClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tools")
+	TSubclassOf<AAToolBase> HammerClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tools")
+	TSubclassOf<AAToolBase> AxeClass;
+
+	//Spawned instances
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tools")
+	AAToolBase* PickaxeInstance;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tools")
+	AAToolBase* HammerInstance;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tools")
+	AAToolBase* AxeInstance;
 
 protected:
 
