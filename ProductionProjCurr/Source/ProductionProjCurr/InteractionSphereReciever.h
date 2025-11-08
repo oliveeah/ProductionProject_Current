@@ -4,13 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Interaction_Interface.h"
 
 #include "InteractionSphereReciever.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class PRODUCTIONPROJCURR_API UInteractionSphereReciever : public UActorComponent, public IInteraction_Interface
+class PRODUCTIONPROJCURR_API UInteractionSphereReciever : public UActorComponent
 {
 	GENERATED_BODY()
 

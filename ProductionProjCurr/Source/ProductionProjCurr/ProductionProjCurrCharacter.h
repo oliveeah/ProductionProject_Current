@@ -13,12 +13,10 @@ class UCameraComponent;
 class UInputAction;
 struct FInputActionValue;
 
+
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
-/**
- *  A simple player-controllable third person character
- *  Implements a controllable orbiting camera
- */
+
 UCLASS(abstract)
 class AProductionProjCurrCharacter : public ACharacter, public ItestInterface
 {
@@ -180,6 +178,7 @@ public:
 
 		bool bIsOverlapping = false;
 		AActor* overlappingActor = nullptr;
+
 	public:
 		
 		UFUNCTION()
@@ -189,6 +188,8 @@ public:
 		void player_OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 		void Interact_Implementation() override;
+
+
 
 
 };
