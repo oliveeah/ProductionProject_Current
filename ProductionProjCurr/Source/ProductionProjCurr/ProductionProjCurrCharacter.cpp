@@ -13,7 +13,6 @@
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 
-
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 AProductionProjCurrCharacter::AProductionProjCurrCharacter()
@@ -97,9 +96,17 @@ void AProductionProjCurrCharacter::BeginPlay()
 	}
 	GetCharacterMovement()->GetCurrentAcceleration();
 
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AProductionProjCurrCharacter::player_OverlapBegin);
+	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &AProductionProjCurrCharacter::player_OverlapEnd);
+
 	//if (IsValid(myWidget))
 	//{
 	//	myWidget->AddToViewport();
+	//}
+
+	//if (GetClass()->ImplementsInterface(UInteraction_Interface::StaticClass()))
+	//{
+		//UE_LOG(LogTemp, Log, TEXT("This object implements MyInterface!"));
 	//}
 }
 
@@ -131,6 +138,7 @@ void AProductionProjCurrCharacter::SetupPlayerInputComponent(UInputComponent* Pl
 
 		//toggle build
 		EnhancedInputComponent->BindAction(toggleBuildAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::toggleBuildModeFn);
+		EnhancedInputComponent->BindAction(interactAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::interactCallback);
 
 
 	}
@@ -159,10 +167,6 @@ void AProductionProjCurrCharacter::Landed(const FHitResult& Hit)
 	bIsFalling = false;
 
 
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Black, FString::Printf(TEXT("Bool: %s"), bIsJumping ? TEXT("true") : TEXT("false")));
-	}
 }
 
 void AProductionProjCurrCharacter::NotifyJumpApex()
@@ -170,10 +174,7 @@ void AProductionProjCurrCharacter::NotifyJumpApex()
 	bIsFalling = true;
 
 	Super::NotifyJumpApex();
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("jump apex reached")));
-	}
+
 }
 
 
@@ -209,10 +210,7 @@ void AProductionProjCurrCharacter::DoJumpStart()
 	// signal the character to jump
 
 	bIsJumping = true;
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Black, FString::Printf(TEXT("Bool: %s"), bIsJumping ? TEXT("true") : TEXT("false")));
-	}
+
 	GetCharacterMovement()->bNotifyApex = true;
 	Jump();
 }
@@ -296,6 +294,24 @@ void AProductionProjCurrCharacter::toggleBuildModeFn()
 
 }
 
+void AProductionProjCurrCharacter::interactCallback()
+{
+	if (overlappingActor)
+	{
+		if (overlappingActor && overlappingActor->GetClass()->ImplementsInterface(UtestInterface::StaticClass()))
+		{
+			//UE_LOG(LogTemp, Display, TEXT("does implement"));
+			ItestInterface::Execute_Interact(overlappingActor);//call interact on overlapping actor implementing interface
+			//ItestInterface::Execute_Interact(this); //call player interface if i need
+		}
+		else
+		{
+			//UE_LOG(LogTemp, Display, TEXT("doesnt implement"));
+		}
+	}
+
+}
+
 void AProductionProjCurrCharacter::toggleHandState(handState state)
 {
 
@@ -376,3 +392,25 @@ void AProductionProjCurrCharacter::toggleBuildWidget(bool _isBuilding)
 		}
 	}
 }
+
+void AProductionProjCurrCharacter::player_OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("player overlap event begin"));
+	bIsOverlapping = true;
+	overlappingActor = OtherActor;
+}
+
+void AProductionProjCurrCharacter::player_OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	UE_LOG(LogTemp, Warning, TEXT("player overlap event end"));
+	bIsOverlapping = false;
+	overlappingActor = nullptr;
+}
+
+void AProductionProjCurrCharacter::Interact_Implementation()
+{
+	UE_LOG(LogTemp, Warning, TEXT("player interface implementation"));
+
+}
+
+

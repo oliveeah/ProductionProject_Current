@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "testInterface.h"
 #include "ProductionProjCurrCharacter.generated.h"
 
 class USpringArmComponent;
@@ -19,7 +20,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
  *  Implements a controllable orbiting camera
  */
 UCLASS(abstract)
-class AProductionProjCurrCharacter : public ACharacter
+class AProductionProjCurrCharacter : public ACharacter, public ItestInterface
 {
 	GENERATED_BODY()
 
@@ -57,6 +58,9 @@ protected:
 	//toggle build
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* toggleBuildAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* interactAction;
 
 public:
 
@@ -114,6 +118,11 @@ public:
 	virtual void toggleBuildModeFn();
 
 
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	virtual void interactCallback();
+
+
+
 
 
 public:
@@ -168,6 +177,18 @@ public:
 
 		UPROPERTY(BlueprintReadOnly)
 		bool bIsFalling = false;
+
+		bool bIsOverlapping = false;
+		AActor* overlappingActor = nullptr;
+	public:
+		
+		UFUNCTION()
+		void player_OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+		UFUNCTION()
+		void player_OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+		void Interact_Implementation() override;
 
 
 };
