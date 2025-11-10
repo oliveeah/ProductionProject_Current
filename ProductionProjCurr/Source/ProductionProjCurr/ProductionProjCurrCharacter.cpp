@@ -52,6 +52,14 @@ AProductionProjCurrCharacter::AProductionProjCurrCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
+
+
+
+
+
+
+
+	//DEPRECEATED
 	axeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AXEMESH"));
 
 	if (axeMesh)
