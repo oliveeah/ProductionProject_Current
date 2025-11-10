@@ -124,8 +124,8 @@ void AProductionProjCurrCharacter::BeginPlay()
 	PickaxeInstance = GetWorld()->SpawnActor<AAToolBase>(PickaxeClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
 	PickaxeInstance->AttachToComponent(
 		GetMesh(), 
-		FAttachmentTransformRules::SnapToTargetNotIncludingScale,
-		FName("HandGrip_L") 
+		FAttachmentTransformRules::SnapToTargetIncludingScale,
+		FName("HandGrip_L_Pickaxe") 
 	); 
 	PickaxeInstance->SetActorHiddenInGame(false);
 

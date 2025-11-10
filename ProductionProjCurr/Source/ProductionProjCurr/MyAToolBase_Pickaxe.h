@@ -21,4 +21,5 @@ protected:
 	virtual void Activate() override;
 	virtual void Deactivate() override;
 	virtual void UseTool() override;
+
 };

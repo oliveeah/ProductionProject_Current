@@ -15,7 +15,7 @@ public:
 	// Sets default values for this actor's properties
 	AAToolBase();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tool")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tool")
 	UStaticMeshComponent* ToolMesh;
 
 protected:

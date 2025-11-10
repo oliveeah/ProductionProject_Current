@@ -3,6 +3,8 @@
 
 #include "AToolBase.h"
 
+#include "UObject/ConstructorHelpers.h"
+
 // Sets default values
 AAToolBase::AAToolBase()
 {
