@@ -54,6 +54,11 @@ AProductionProjCurrCharacter::AProductionProjCurrCharacter()
 
 
 
+//	AxeInstance = CreateDefaultSubobject<AAToolBase>(TEXT("Pickaxe Subclass Instance"));
+
+
+	//HammerInstance = CreateDefaultSubobject<AAToolBase>(TEXT("Hammer Subclass Instance"));
+
 
 
 
@@ -102,10 +107,29 @@ void AProductionProjCurrCharacter::BeginPlay()
 	{
 		myWidget = CreateWidget<UUserWidget>(GetWorld()->GetFirstPlayerController(), myWidgetClass);
 	}
+
+
 	GetCharacterMovement()->GetCurrentAcceleration();
 
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AProductionProjCurrCharacter::player_OverlapBegin);
 	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &AProductionProjCurrCharacter::player_OverlapEnd);
+
+
+
+	FActorSpawnParameters spawnParams;
+
+	spawnParams.Owner = this;
+	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	PickaxeInstance = GetWorld()->SpawnActor<AAToolBase>(PickaxeClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
+	PickaxeInstance->AttachToComponent(
+		GetMesh(), 
+		FAttachmentTransformRules::SnapToTargetNotIncludingScale,
+		FName("HandGrip_L") 
+	); 
+	PickaxeInstance->SetActorHiddenInGame(false);
+
+
 
 	//if (IsValid(myWidget))
 	//{

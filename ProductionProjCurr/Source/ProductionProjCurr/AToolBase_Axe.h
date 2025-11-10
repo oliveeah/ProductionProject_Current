@@ -13,6 +13,8 @@ UCLASS()
 class PRODUCTIONPROJCURR_API AAToolBase_Axe : public AAToolBase
 {
 	GENERATED_BODY()
+public:
+	AAToolBase_Axe();
 	
 protected:
 	virtual void Activate() override;

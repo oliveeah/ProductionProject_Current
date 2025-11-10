@@ -14,7 +14,8 @@ class PRODUCTIONPROJCURR_API AAToolBase_Hammer : public AAToolBase
 {
 	GENERATED_BODY()
 
-
+public:
+	AAToolBase_Hammer();
 	
 protected:
 	virtual void Activate() override;

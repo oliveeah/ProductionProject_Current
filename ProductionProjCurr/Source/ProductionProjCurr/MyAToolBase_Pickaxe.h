@@ -13,6 +13,9 @@ UCLASS()
 class PRODUCTIONPROJCURR_API AMyAToolBase_Pickaxe : public AAToolBase
 {
 	GENERATED_BODY()
+
+public:
+	AMyAToolBase_Pickaxe();
 	
 protected:
 	virtual void Activate() override;
