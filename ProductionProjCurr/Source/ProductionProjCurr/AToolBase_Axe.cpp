@@ -20,12 +20,17 @@ AAToolBase_Axe::AAToolBase_Axe()
 
 void AAToolBase_Axe::Activate()
 {
+    SetActorHiddenInGame(false);
+
 }
 
 void AAToolBase_Axe::Deactivate()
 {
+    SetActorHiddenInGame(true);
+
 }
 
 void AAToolBase_Axe::UseTool()
 {
 }
+

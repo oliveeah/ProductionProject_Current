@@ -18,8 +18,8 @@ public:
 	AAToolBase_Hammer();
 	
 protected:
-	virtual void Activate() override;
-	virtual void Deactivate() override;
-	virtual void UseTool() override;
+	 virtual void Activate() override;
+	 virtual void Deactivate() override;
+	 virtual void UseTool() override;
 	
 };

@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "AToolBase.generated.h"
 
-UCLASS(Abstract)
+UCLASS()
 class PRODUCTIONPROJCURR_API AAToolBase : public AActor
 {
 	GENERATED_BODY()
@@ -22,12 +22,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-protected:
-	virtual void Activate() PURE_VIRTUAL(AAToolBase::Activate, UE_LOG(LogTemp, Display, TEXT("default implementation of activate")););
-	virtual void Deactivate() PURE_VIRTUAL(AAToolBase::Deactivate, UE_LOG(LogTemp, Display, TEXT("default implementation of deactivate")););
-	virtual void UseTool() PURE_VIRTUAL(AAToolBase::UseTool, UE_LOG(LogTemp, Display, TEXT("default implementation of use tool")););
+public:
+	virtual void Activate();
+	virtual void Deactivate();
+	virtual void UseTool();
 
-
+	
 public:	
 
 

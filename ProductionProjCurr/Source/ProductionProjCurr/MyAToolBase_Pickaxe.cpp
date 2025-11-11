@@ -29,13 +29,16 @@ AMyAToolBase_Pickaxe::AMyAToolBase_Pickaxe()
 
 void AMyAToolBase_Pickaxe::Activate()
 {
+    SetActorHiddenInGame(false);
+
 }
 
 void AMyAToolBase_Pickaxe::Deactivate()
 {
+    SetActorHiddenInGame(true);
+
 }
 
 void AMyAToolBase_Pickaxe::UseTool()
 {
 }
-

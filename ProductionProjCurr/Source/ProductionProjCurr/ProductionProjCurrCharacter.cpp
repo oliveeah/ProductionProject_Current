@@ -94,7 +94,6 @@ AProductionProjCurrCharacter::AProductionProjCurrCharacter()
 	_handState = unequipped;
 
 
-
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
@@ -125,7 +124,7 @@ void AProductionProjCurrCharacter::BeginPlay()
 	PickaxeInstance->AttachToComponent(
 		GetMesh(), 
 		FAttachmentTransformRules::SnapToTargetIncludingScale,
-		FName("HandGrip_L_Pickaxe") 
+		FName("HandGrip_R_Pickaxe") 
 	); 
 	PickaxeInstance->SetActorHiddenInGame(true);
 
@@ -133,7 +132,7 @@ void AProductionProjCurrCharacter::BeginPlay()
 	HammerInstance->AttachToComponent(
 		GetMesh(),
 		FAttachmentTransformRules::SnapToTargetIncludingScale,
-		FName("HandGrip_L_Hammer")
+		FName("HandGrip_R_Hammer")
 	);
 	HammerInstance->SetActorHiddenInGame(true);
 
@@ -141,12 +140,13 @@ void AProductionProjCurrCharacter::BeginPlay()
 	AxeInstance->AttachToComponent(
 		GetMesh(),
 		FAttachmentTransformRules::SnapToTargetIncludingScale,
-		FName("HandGrip_L_Axe")
+		FName("HandGrip_R_Axe")
 	);
 	AxeInstance->SetActorHiddenInGame(true);
 
-
-
+	toolArray.Add(AxeInstance);
+	toolArray.Add(PickaxeInstance);
+	toolArray.Add(HammerInstance);
 	//if (IsValid(myWidget))
 	//{
 	//	myWidget->AddToViewport();
@@ -372,23 +372,30 @@ void AProductionProjCurrCharacter::toggleHandState()
 	{
 	case unequipped:
 		UE_LOG(LogTemp, Warning, TEXT("unequipped"));
+
+
 		break;
 	case axe:
 		UE_LOG(LogTemp, Warning, TEXT("axe"));
+		activeTool = AxeInstance;
+
 
 		break;
 	case pickaxe:
 		UE_LOG(LogTemp, Warning, TEXT("pickaxe"));
+		activeTool = PickaxeInstance;
+
 
 		break;
 	case building:
 		UE_LOG(LogTemp, Warning, TEXT("building"));
+		activeTool = HammerInstance;
 
 		break;
 
 
 	}
-
+	deactivateUneqippedTools();
 	
 
 
@@ -445,5 +452,32 @@ bool AProductionProjCurrCharacter::unequipCheck(handState _state)
 		return false;
 	}
 }
+
+void AProductionProjCurrCharacter::deactivateUneqippedTools()
+{
+	if (_handState == unequipped) 
+	{ 
+		activeTool->Deactivate(); 
+		activeTool = nullptr;
+
+	}
+
+	for (AAToolBase* Tool : toolArray)
+	{
+		if (!Tool) continue;
+
+		if (Tool == activeTool)
+		{
+			//Tool->SetActorHiddenInGame(false);
+			Tool->Activate();
+		}
+		else
+		{
+			//Tool->SetActorHiddenInGame(true);
+			Tool->Deactivate();
+		}
+	}
+}
+
 
 

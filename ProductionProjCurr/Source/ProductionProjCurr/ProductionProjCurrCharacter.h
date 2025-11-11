@@ -215,5 +215,11 @@ public:
 
 		bool unequipCheck(handState _state);
 
+		void deactivateUneqippedTools();
+
+		TArray<AAToolBase*> toolArray;
+
+		AAToolBase* activeTool = nullptr;
+
 };
 

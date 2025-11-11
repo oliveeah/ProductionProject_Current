@@ -20,12 +20,18 @@ AAToolBase_Hammer::AAToolBase_Hammer()
 
 void AAToolBase_Hammer::Activate()
 {
+    SetActorHiddenInGame(false);
 }
 
 void AAToolBase_Hammer::Deactivate()
 {
+    SetActorHiddenInGame(true);
+
 }
 
 void AAToolBase_Hammer::UseTool()
 {
 }
+
+
+

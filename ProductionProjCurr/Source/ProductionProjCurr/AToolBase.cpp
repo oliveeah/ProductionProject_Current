@@ -22,4 +22,17 @@ void AAToolBase::BeginPlay()
 	
 }
 
+void AAToolBase::Activate()
+{
+    //SetActorHidde
+}
+
+void AAToolBase::Deactivate()
+{
+}
+
+void AAToolBase::UseTool()
+{
+}
+
 
