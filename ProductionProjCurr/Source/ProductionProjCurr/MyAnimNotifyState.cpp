@@ -14,7 +14,7 @@ void UMyAnimNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSeque
 
 	AActor* owner = MeshComp->GetOwner();
 	UWorld* world = MeshComp->GetWorld();
-	FName boneName = TEXT("RightHand");
+	FName boneName = TEXT("hand_r");
 	FVector boneLocation = MeshComp->GetBoneLocation(boneName, EBoneSpaces::WorldSpace);
 
 	TArray<FHitResult> HitResults;

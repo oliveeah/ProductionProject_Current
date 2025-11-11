@@ -62,35 +62,6 @@ AProductionProjCurrCharacter::AProductionProjCurrCharacter()
 
 
 
-
-
-	//DEPRECEATED
-	//axeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AXEMESH"));
-
-	//if (axeMesh)
-	//{
-	//	axeMesh->SetupAttachment(GetMesh(), TEXT("axesocket"));
-	//	axeMesh->SetVisibility(false);
-	//}
-
-	//pickaxeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PICKAXEMESH"));
-
-	//if (pickaxeMesh)
-	//{
-	//	pickaxeMesh->SetupAttachment(GetMesh(), TEXT("pickaxesocket"));
-
-	//	axeMesh->SetVisibility(false);
-
-	//}
-
-	//hammerMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HAMMERMESH"));
-
-	//if (hammerMesh)
-	//{
-	//	hammerMesh->SetupAttachment(GetMesh(), TEXT("hammersocket"));
-	//	hammerMesh->SetVisibility(false);
-	//}
-
 	_handState = unequipped;
 
 
@@ -339,7 +310,7 @@ void AProductionProjCurrCharacter::UsePressed()
 {
 	UE_LOG(LogTemp, Display, TEXT("swing"));
 
-	if (swingMontage && GetMesh() && GetMesh()->GetAnimInstance() && !noItemIsHeld && !isBuilding)
+	if (swingMontage && GetMesh() && GetMesh()->GetAnimInstance() && _handState != unequipped && _handState != !building)
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		AnimInstance->Montage_Play(swingMontage);
