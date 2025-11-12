@@ -52,34 +52,17 @@ AProductionProjCurrCharacter::AProductionProjCurrCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
-	axeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AXEMESH"));
 
-	if (axeMesh)
-	{
-		axeMesh->SetupAttachment(GetMesh(), TEXT("axesocket"));
-		axeMesh->SetVisibility(false);
-	}
 
-	pickaxeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PICKAXEMESH"));
+//	AxeInstance = CreateDefaultSubobject<AAToolBase>(TEXT("Pickaxe Subclass Instance"));
 
-	if (pickaxeMesh)
-	{
-		pickaxeMesh->SetupAttachment(GetMesh(), TEXT("pickaxesocket"));
 
-		axeMesh->SetVisibility(false);
+	//HammerInstance = CreateDefaultSubobject<AAToolBase>(TEXT("Hammer Subclass Instance"));
 
-	}
 
-	hammerMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HAMMERMESH"));
 
-	if (hammerMesh)
-	{
-		hammerMesh->SetupAttachment(GetMesh(), TEXT("hammersocket"));
-		hammerMesh->SetVisibility(false);
-	}
 
-	handState::unequipped;
-
+	_handState = unequipped;
 
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
@@ -94,11 +77,47 @@ void AProductionProjCurrCharacter::BeginPlay()
 	{
 		myWidget = CreateWidget<UUserWidget>(GetWorld()->GetFirstPlayerController(), myWidgetClass);
 	}
+
+
 	GetCharacterMovement()->GetCurrentAcceleration();
 
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AProductionProjCurrCharacter::player_OverlapBegin);
 	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &AProductionProjCurrCharacter::player_OverlapEnd);
 
+
+
+	FActorSpawnParameters spawnParams;
+
+	spawnParams.Owner = this;
+	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	PickaxeInstance = GetWorld()->SpawnActor<AAToolBase>(PickaxeClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
+	PickaxeInstance->AttachToComponent(
+		GetMesh(), 
+		FAttachmentTransformRules::SnapToTargetIncludingScale,
+		FName("HandGrip_R_Pickaxe") 
+	); 
+	PickaxeInstance->SetActorHiddenInGame(true);
+
+	HammerInstance = GetWorld()->SpawnActor<AAToolBase>(HammerClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
+	HammerInstance->AttachToComponent(
+		GetMesh(),
+		FAttachmentTransformRules::SnapToTargetIncludingScale,
+		FName("HandGrip_R_Hammer")
+	);
+	HammerInstance->SetActorHiddenInGame(true);
+
+	AxeInstance = GetWorld()->SpawnActor<AAToolBase>(AxeClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
+	AxeInstance->AttachToComponent(
+		GetMesh(),
+		FAttachmentTransformRules::SnapToTargetIncludingScale,
+		FName("HandGrip_R_Axe")
+	);
+	AxeInstance->SetActorHiddenInGame(true);
+
+	toolArray.Add(AxeInstance);
+	toolArray.Add(PickaxeInstance);
+	toolArray.Add(HammerInstance);
 	//if (IsValid(myWidget))
 	//{
 	//	myWidget->AddToViewport();
@@ -130,8 +149,8 @@ void AProductionProjCurrCharacter::SetupPlayerInputComponent(UInputComponent* Pl
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AProductionProjCurrCharacter::Move);
 
 		//tools
-		EnhancedInputComponent->BindAction(toolOneAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::ToolOnePressed);
-		EnhancedInputComponent->BindAction(toolTwoAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::ToolTwoPressed);
+		EnhancedInputComponent->BindAction(toggleAxeAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::AxePressed);
+		EnhancedInputComponent->BindAction(togglePickaxeAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::PickaxePressed);
 
 		//use
 		EnhancedInputComponent->BindAction(useAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::UsePressed);
@@ -228,36 +247,60 @@ void AProductionProjCurrCharacter::DoJumpEnd()
 /// HAND STATE STUFF 
 /// </summary>
 
-void AProductionProjCurrCharacter::ToolOnePressed()
+void AProductionProjCurrCharacter::AxePressed()
 {
-	if (isBuilding) { return; }
-	if (axeIsHeld)
+
+	if (unequipCheck(axe))
 	{
-		toggleHandState(handState::unequipped);
+		_handState = unequipped;
+		toggleHandState();
 	}
 	else
 	{
-		toggleHandState(handState::axe);
+		_handState = axe;
 
+		toggleHandState();
+	}
+}
+
+void AProductionProjCurrCharacter::PickaxePressed()
+{
+
+
+	if (unequipCheck(pickaxe))
+	{
+		_handState = unequipped;
+		toggleHandState();
+	}
+	else
+	{
+		_handState = pickaxe;
+
+		toggleHandState();
 	}
 
 }
 
-void AProductionProjCurrCharacter::ToolTwoPressed()
+void AProductionProjCurrCharacter::toggleBuildModeFn()
 {
-	if (isBuilding) { return; }
 
-	if (pickaxeIsHeld)
+
+	if (unequipCheck(building))
 	{
-		toggleHandState(handState::unequipped);
+		_handState = unequipped;
+		toggleHandState();
 	}
 	else
 	{
-		toggleHandState(handState::pickaxe);
-
+		_handState = building;
+		toggleHandState();
 	}
 
+
+
+
 }
+
 
 /// <summary>
 /// HAND STATE STUFF 
@@ -267,32 +310,13 @@ void AProductionProjCurrCharacter::UsePressed()
 {
 	UE_LOG(LogTemp, Display, TEXT("swing"));
 
-	if (swingMontage && GetMesh() && GetMesh()->GetAnimInstance() && !noItemIsHeld && !isBuilding)
+	if (swingMontage && GetMesh() && GetMesh()->GetAnimInstance() && _handState != unequipped && _handState != !building)
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		AnimInstance->Montage_Play(swingMontage);
 	}
 }
 
-void AProductionProjCurrCharacter::toggleBuildModeFn()
-{
-	isBuilding = !isBuilding; 
-	
-	if (isBuilding)
-	{
-		UE_LOG(LogTemp, Display, TEXT("buliding"));
-
-	}
-	else
-	{
-		UE_LOG(LogTemp, Display, TEXT("not building"));
-
-	}
-	isBuilding ? toggleHandState(handState::building) : toggleHandState(handState::unequipped);
-	isBuilding ? toggleBuildWidget(true) : toggleBuildWidget(false);
-
-
-}
 
 void AProductionProjCurrCharacter::interactCallback()
 {
@@ -312,62 +336,37 @@ void AProductionProjCurrCharacter::interactCallback()
 
 }
 
-void AProductionProjCurrCharacter::toggleHandState(handState state)
+void AProductionProjCurrCharacter::toggleHandState()
 {
 
-	switch(state)
+	switch (_handState)
 	{
+	case unequipped:
+		UE_LOG(LogTemp, Warning, TEXT("unequipped"));
 
-		case(axe):
-				axeMesh->SetVisibility(true);
-				pickaxeMesh->SetVisibility(false);
-				axeIsHeld = true;
-				pickaxeIsHeld = false;
-				noItemIsHeld = false;
-
-				UE_LOG(LogTemp, Warning, TEXT("holding axe"));
-
-			
-		
-		break;
-
-		case(pickaxe):
-				axeMesh->SetVisibility(false);
-				pickaxeMesh->SetVisibility(true);
-				axeIsHeld = false;
-				pickaxeIsHeld = true;
-				UE_LOG(LogTemp, Warning, TEXT("holding pickaxe"));
-				noItemIsHeld = false;
-
-			
 
 		break;
-		case(unequipped):
-			axeMesh->SetVisibility(false);
-			pickaxeMesh->SetVisibility(false);
-			hammerMesh->SetVisibility(false);
+	case axe:
+		UE_LOG(LogTemp, Warning, TEXT("axe"));
+		activeTool = AxeInstance;
 
-			axeIsHeld = false;
-			pickaxeIsHeld = false;
-			noItemIsHeld = true;
 
-			UE_LOG(LogTemp, Warning, TEXT("holding nothing"));
+		break;
+	case pickaxe:
+		UE_LOG(LogTemp, Warning, TEXT("pickaxe"));
+		activeTool = PickaxeInstance;
+
+
+		break;
+	case building:
+		UE_LOG(LogTemp, Warning, TEXT("building"));
+		activeTool = HammerInstance;
 
 		break;
 
-		case(building):
-			UE_LOG(LogTemp, Display, TEXT("buliding case called"));
-			hammerMesh->SetVisibility(true);
-			axeMesh->SetVisibility(false);
-			pickaxeMesh->SetVisibility(false);
-			axeIsHeld = false;
-			pickaxeIsHeld = false;
-			noItemIsHeld = false;
-			break;
 
 	}
-
-
+	deactivateUneqippedTools();
 	
 
 
@@ -412,5 +411,44 @@ void AProductionProjCurrCharacter::Interact_Implementation()
 	UE_LOG(LogTemp, Warning, TEXT("player interface implementation"));
 
 }
+
+bool AProductionProjCurrCharacter::unequipCheck(handState _state)
+{
+	if (_state == _handState) //if weapon swapping 2 is same as holding
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void AProductionProjCurrCharacter::deactivateUneqippedTools()
+{
+	if (_handState == unequipped) 
+	{ 
+		activeTool->Deactivate(); 
+		activeTool = nullptr;
+
+	}
+
+	for (AAToolBase* Tool : toolArray)
+	{
+		if (!Tool) continue;
+
+		if (Tool == activeTool)
+		{
+			//Tool->SetActorHiddenInGame(false);
+			Tool->Activate();
+		}
+		else
+		{
+			//Tool->SetActorHiddenInGame(true);
+			Tool->Deactivate();
+		}
+	}
+}
+
 
 

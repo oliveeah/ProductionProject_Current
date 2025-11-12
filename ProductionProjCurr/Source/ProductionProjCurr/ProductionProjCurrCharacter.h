@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "testInterface.h"
+#include "AToolBase.h"
 #include "ProductionProjCurrCharacter.generated.h"
 
 class USpringArmComponent;
@@ -13,12 +14,10 @@ class UCameraComponent;
 class UInputAction;
 struct FInputActionValue;
 
+
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
-/**
- *  A simple player-controllable third person character
- *  Implements a controllable orbiting camera
- */
+
 UCLASS(abstract)
 class AProductionProjCurrCharacter : public ACharacter, public ItestInterface
 {
@@ -31,7 +30,26 @@ class AProductionProjCurrCharacter : public ACharacter, public ItestInterface
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+public:
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tools")
+	TSubclassOf<AAToolBase> PickaxeClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tools")
+	TSubclassOf<AAToolBase> HammerClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tools")
+	TSubclassOf<AAToolBase> AxeClass;
+
+	//Spawned instances
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tools")
+	AAToolBase* PickaxeInstance;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tools")
+	AAToolBase* HammerInstance;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tools")
+	AAToolBase* AxeInstance;
 
 protected:
 
@@ -45,11 +63,11 @@ protected:
 
 	//tool1//
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	UInputAction* toolOneAction;
+	UInputAction* toggleAxeAction;
 
 	//tool2//
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	UInputAction* toolTwoAction;
+	UInputAction* togglePickaxeAction;
 
 	//use//
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
@@ -106,10 +124,10 @@ public:
 	virtual void DoJumpEnd();
 
 	UFUNCTION(BlueprintCallable, Category = "Input")
-	virtual void ToolOnePressed();
+	virtual void AxePressed();
 
 	UFUNCTION(BlueprintCallable, Category = "Input")
-	virtual void ToolTwoPressed();
+	virtual void PickaxePressed();
 
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	virtual void UsePressed();
@@ -133,21 +151,24 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-	UPROPERTY(VisibleAnywhere, Category = "Mesh")
+	/*UPROPERTY(VisibleAnywhere, Category = "Mesh")
 	class UStaticMeshComponent* axeMesh;
 
 	UPROPERTY(VisibleAnywhere, Category = "Mesh")
 	class UStaticMeshComponent* pickaxeMesh;
 
 	UPROPERTY(VisibleAnywhere, Category = "Mesh")
-	class UStaticMeshComponent* hammerMesh;
+	class UStaticMeshComponent* hammerMesh;*/
 
-	enum handState
+	enum handState 
 	{
 		unequipped, axe, pickaxe, building,
 	};
 
-	void toggleHandState(handState state);
+	handState _handState;
+
+
+	void toggleHandState();
 
 	bool axeIsHeld = false;
 	bool pickaxeIsHeld = false;
@@ -180,6 +201,7 @@ public:
 
 		bool bIsOverlapping = false;
 		AActor* overlappingActor = nullptr;
+
 	public:
 		
 		UFUNCTION()
@@ -190,6 +212,14 @@ public:
 
 		void Interact_Implementation() override;
 
+
+		bool unequipCheck(handState _state);
+
+		void deactivateUneqippedTools();
+
+		TArray<AAToolBase*> toolArray;
+
+		AAToolBase* activeTool = nullptr;
 
 };
 
