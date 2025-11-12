@@ -53,20 +53,6 @@ AProductionProjCurrCharacter::AProductionProjCurrCharacter()
 	FollowCamera->bUsePawnControlRotation = false;
 
 
-
-//	AxeInstance = CreateDefaultSubobject<AAToolBase>(TEXT("Pickaxe Subclass Instance"));
-
-
-	//HammerInstance = CreateDefaultSubobject<AAToolBase>(TEXT("Hammer Subclass Instance"));
-
-
-
-
-	_handState = unequipped;
-
-
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
 void AProductionProjCurrCharacter::BeginPlay()
@@ -78,60 +64,11 @@ void AProductionProjCurrCharacter::BeginPlay()
 		myWidget = CreateWidget<UUserWidget>(GetWorld()->GetFirstPlayerController(), myWidgetClass);
 	}
 
-
-	GetCharacterMovement()->GetCurrentAcceleration();
-
-	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AProductionProjCurrCharacter::player_OverlapBegin);
-	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &AProductionProjCurrCharacter::player_OverlapEnd);
-
-
-
-	FActorSpawnParameters spawnParams;
-
-	spawnParams.Owner = this;
-	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	PickaxeInstance = GetWorld()->SpawnActor<AAToolBase>(PickaxeClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
-	PickaxeInstance->AttachToComponent(
-		GetMesh(), 
-		FAttachmentTransformRules::SnapToTargetIncludingScale,
-		FName("HandGrip_R_Pickaxe") 
-	); 
-	PickaxeInstance->SetActorHiddenInGame(true);
-
-	HammerInstance = GetWorld()->SpawnActor<AAToolBase>(HammerClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
-	HammerInstance->AttachToComponent(
-		GetMesh(),
-		FAttachmentTransformRules::SnapToTargetIncludingScale,
-		FName("HandGrip_R_Hammer")
-	);
-	HammerInstance->SetActorHiddenInGame(true);
-
-	AxeInstance = GetWorld()->SpawnActor<AAToolBase>(AxeClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
-	AxeInstance->AttachToComponent(
-		GetMesh(),
-		FAttachmentTransformRules::SnapToTargetIncludingScale,
-		FName("HandGrip_R_Axe")
-	);
-	AxeInstance->SetActorHiddenInGame(true);
-
-	toolArray.Add(AxeInstance);
-	toolArray.Add(PickaxeInstance);
-	toolArray.Add(HammerInstance);
-	//if (IsValid(myWidget))
-	//{
-	//	myWidget->AddToViewport();
-	//}
-
-	//if (GetClass()->ImplementsInterface(UInteraction_Interface::StaticClass()))
-	//{
-		//UE_LOG(LogTemp, Log, TEXT("This object implements MyInterface!"));
-	//}
 }
 
 void AProductionProjCurrCharacter::Tick(float DeltaTime)
 {
-	FVelocity = RootComponent->GetComponentVelocity();
+
 }
 
 
@@ -140,23 +77,14 @@ void AProductionProjCurrCharacter::SetupPlayerInputComponent(UInputComponent* Pl
 {
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
-		
-		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::DoJumpStart);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AProductionProjCurrCharacter::DoJumpEnd);
+
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AProductionProjCurrCharacter::Move);
 
-		//tools
-		EnhancedInputComponent->BindAction(toggleAxeAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::AxePressed);
-		EnhancedInputComponent->BindAction(togglePickaxeAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::PickaxePressed);
-
-		//use
 		EnhancedInputComponent->BindAction(useAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::UsePressed);
 
 		//toggle build
-		EnhancedInputComponent->BindAction(toggleBuildAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::toggleBuildModeFn);
 		EnhancedInputComponent->BindAction(interactAction, ETriggerEvent::Started, this, &AProductionProjCurrCharacter::interactCallback);
 
 
@@ -179,23 +107,6 @@ void AProductionProjCurrCharacter::Move(const FInputActionValue& Value)
 	// route the input
 	DoMove(MovementVector.X, MovementVector.Y);
 }
-
-void AProductionProjCurrCharacter::Landed(const FHitResult& Hit)
-{
-	bIsJumping = false;
-	bIsFalling = false;
-
-
-}
-
-void AProductionProjCurrCharacter::NotifyJumpApex()
-{
-	bIsFalling = true;
-
-	Super::NotifyJumpApex();
-
-}
-
 
 
 
@@ -224,153 +135,29 @@ void AProductionProjCurrCharacter::DoMove(float Right, float Forward)
 }
 
 
-void AProductionProjCurrCharacter::DoJumpStart()
+
+
+
+
+
+
+
+void AProductionProjCurrCharacter::UsePressed()
 {
-	// signal the character to jump
-
-	bIsJumping = true;
-
-	GetCharacterMovement()->bNotifyApex = true;
-	Jump();
-}
-
-void AProductionProjCurrCharacter::DoJumpEnd()
-{
-	// signal the character to stop jumping
-	StopJumping();
-
-}
-
-
-//////////////////////////////////////////
-/// <summary>
-/// HAND STATE STUFF 
-/// </summary>
-
-void AProductionProjCurrCharacter::AxePressed()
-{
-
-	if (unequipCheck(axe))
-	{
-		_handState = unequipped;
-		toggleHandState();
-	}
-	else
-	{
-		_handState = axe;
-
-		toggleHandState();
-	}
-}
-
-void AProductionProjCurrCharacter::PickaxePressed()
-{
-
-
-	if (unequipCheck(pickaxe))
-	{
-		_handState = unequipped;
-		toggleHandState();
-	}
-	else
-	{
-		_handState = pickaxe;
-
-		toggleHandState();
-	}
 
 }
 
 void AProductionProjCurrCharacter::toggleBuildModeFn()
 {
-
-
-	if (unequipCheck(building))
-	{
-		_handState = unequipped;
-		toggleHandState();
-	}
-	else
-	{
-		_handState = building;
-		toggleHandState();
-	}
-
-
-
-
-}
-
-
-/// <summary>
-/// HAND STATE STUFF 
-/// </summary>
-
-void AProductionProjCurrCharacter::UsePressed()
-{
-	UE_LOG(LogTemp, Display, TEXT("swing"));
-
-	if (swingMontage && GetMesh() && GetMesh()->GetAnimInstance() && _handState != unequipped && _handState != !building)
-	{
-		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-		AnimInstance->Montage_Play(swingMontage);
-	}
 }
 
 
 void AProductionProjCurrCharacter::interactCallback()
 {
-	if (overlappingActor)
-	{
-		if (overlappingActor && overlappingActor->GetClass()->ImplementsInterface(UtestInterface::StaticClass()))
-		{
-			//UE_LOG(LogTemp, Display, TEXT("does implement"));
-			ItestInterface::Execute_Interact(overlappingActor);//call interact on overlapping actor implementing interface
-			//ItestInterface::Execute_Interact(this); //call player interface if i need
-		}
-		else
-		{
-			//UE_LOG(LogTemp, Display, TEXT("doesnt implement"));
-		}
-	}
-
-}
-
-void AProductionProjCurrCharacter::toggleHandState()
-{
-
-	switch (_handState)
-	{
-	case unequipped:
-		UE_LOG(LogTemp, Warning, TEXT("unequipped"));
-
-
-		break;
-	case axe:
-		UE_LOG(LogTemp, Warning, TEXT("axe"));
-		activeTool = AxeInstance;
-
-
-		break;
-	case pickaxe:
-		UE_LOG(LogTemp, Warning, TEXT("pickaxe"));
-		activeTool = PickaxeInstance;
-
-
-		break;
-	case building:
-		UE_LOG(LogTemp, Warning, TEXT("building"));
-		activeTool = HammerInstance;
-
-		break;
-
-
-	}
-	deactivateUneqippedTools();
-	
 
 
 }
+
 
 void AProductionProjCurrCharacter::toggleBuildWidget(bool _isBuilding)
 {
@@ -392,63 +179,7 @@ void AProductionProjCurrCharacter::toggleBuildWidget(bool _isBuilding)
 	}
 }
 
-void AProductionProjCurrCharacter::player_OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	UE_LOG(LogTemp, Warning, TEXT("player overlap event begin"));
-	bIsOverlapping = true;
-	overlappingActor = OtherActor;
-}
 
-void AProductionProjCurrCharacter::player_OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	UE_LOG(LogTemp, Warning, TEXT("player overlap event end"));
-	bIsOverlapping = false;
-	overlappingActor = nullptr;
-}
-
-void AProductionProjCurrCharacter::Interact_Implementation()
-{
-	UE_LOG(LogTemp, Warning, TEXT("player interface implementation"));
-
-}
-
-bool AProductionProjCurrCharacter::unequipCheck(handState _state)
-{
-	if (_state == _handState) //if weapon swapping 2 is same as holding
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-void AProductionProjCurrCharacter::deactivateUneqippedTools()
-{
-	if (_handState == unequipped) 
-	{ 
-		activeTool->Deactivate(); 
-		activeTool = nullptr;
-
-	}
-
-	for (AAToolBase* Tool : toolArray)
-	{
-		if (!Tool) continue;
-
-		if (Tool == activeTool)
-		{
-			//Tool->SetActorHiddenInGame(false);
-			Tool->Activate();
-		}
-		else
-		{
-			//Tool->SetActorHiddenInGame(true);
-			Tool->Deactivate();
-		}
-	}
-}
 
 
 
