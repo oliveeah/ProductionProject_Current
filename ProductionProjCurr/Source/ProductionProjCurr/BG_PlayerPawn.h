@@ -31,7 +31,10 @@ public:
 	UInputAction* lookAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	UInputAction* _clickAction;
+	UInputAction* clickAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* scrollAction;
 
 protected:
 	/** Called for movement input */
@@ -42,6 +45,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	virtual void clickCallback();
+
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	virtual void scrollCallback(const FInputActionValue& Value);
 
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	virtual void DoMove(float Right, float Forward);
@@ -65,4 +71,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+public:
+	float TargetFOV = 90.0f;     
+	float CurrentFOV = 90.0f;    
+	float ZoomSpeed = 10.0f;      
+	float ZoomInterpSpeed = 10.0f; 
 };

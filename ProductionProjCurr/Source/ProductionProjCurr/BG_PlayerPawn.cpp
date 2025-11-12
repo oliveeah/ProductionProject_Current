@@ -49,12 +49,27 @@ void ABG_PlayerPawn::clickCallback()
 	UE_LOG(LogTemp, Display, TEXT("click callback called"));
 }
 
+void ABG_PlayerPawn::scrollCallback(const FInputActionValue& Value)
+{
+	float scrollValue = Value.Get<float>();
+
+
+	if (FMath::Abs(scrollValue) > KINDA_SMALL_NUMBER)
+	{
+		TargetFOV = FMath::Clamp(TargetFOV - scrollValue * ZoomSpeed, 10.0f, 110.0f);
+
+		UE_LOG(LogTemp, Display, TEXT("Scroll: %f | TargetFOV: %f"), scrollValue, TargetFOV);
+	}
+}
+
 
 // Called every frame
 void ABG_PlayerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	CurrentFOV = FMath::FInterpTo(CurrentFOV, TargetFOV, DeltaTime, ZoomInterpSpeed);
+	Camera->SetFieldOfView(CurrentFOV);
 }
 
 // Called to bind functionality to input
@@ -67,9 +82,10 @@ void ABG_PlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 
 		// Moving
-		EnhancedInputComponent->BindAction(_clickAction, ETriggerEvent::Triggered, this, &ABG_PlayerPawn::clickCallback);
+		EnhancedInputComponent->BindAction(clickAction, ETriggerEvent::Triggered, this, &ABG_PlayerPawn::clickCallback);
 		EnhancedInputComponent->BindAction(moveAction, ETriggerEvent::Triggered, this, &ABG_PlayerPawn::MoveCallback);
 		EnhancedInputComponent->BindAction(lookAction, ETriggerEvent::Triggered, this, &ABG_PlayerPawn::LookCallback);
+		EnhancedInputComponent->BindAction(scrollAction, ETriggerEvent::Triggered, this, &ABG_PlayerPawn::scrollCallback);
 
 	}
 	else
@@ -81,6 +97,7 @@ void ABG_PlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void ABG_PlayerPawn::MoveCallback(const FInputActionValue& Value)
 {
 	// input is a Vector2D
+
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
 	// route the input
@@ -114,6 +131,7 @@ void ABG_PlayerPawn::DoMove(float Right, float Forward)
 
 		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
 
 		// add movement 
 		AddMovementInput(ForwardDirection, Forward);
