@@ -35,24 +35,28 @@ void ABG_Tile::OnConstruction(const FTransform& transform)
 	// Clear old instances so we don’t duplicate
 	staticMesh->ClearInstances();
 
+
+	float hexWidth = tileWidth;
+	float hexHeight = hexWidth * 0.866f; // sqrt(3)/2 for perfect hex spacing
+
 	//loop create instances
-	for (int32 i = 0; i < numberOfTiles; i++)
+	for (int32 rows = 1; rows < numberOfRows+1; rows++)
 	{
-		float _ySpawnOffset;
+		//ySpawnOffset = ySpawnOffset * rows;
 
-		if (i % 2 == 0)//even
+		for (int32 cols = 0; cols < numberOfColumns; cols++)
 		{
-			_ySpawnOffset = 0.0f;
-		}
-		else//odd
-		{
-			_ySpawnOffset = ySpawnOffset;
+			float xOffset = (rows % 2 == 0) ? 0.0f : (hexWidth * 0.5f);
 
-		}
-		FVector spawnlocation(_ySpawnOffset, i * tileWidth, 0.0f);
-		FTransform instanceTransform(FRotator::ZeroRotator, spawnlocation);
-		staticMesh->AddInstance(instanceTransform);
 
+
+			float X = cols * hexWidth;
+			float Y = rows * hexHeight;
+
+			FVector spawnLocation(X + xOffset, Y, 0.0f);
+			FTransform instanceTransform(FRotator::ZeroRotator, spawnLocation);
+			staticMesh->AddInstance(instanceTransform);
+		}
 	}
 }
 

@@ -40,10 +40,13 @@ public://variables
 	float tileWidth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	int32 numberOfTiles;
+	int32 numberOfColumns;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	int32 numberOfRows;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 
-	float ySpawnOffset;
+	float xSpawnOffset;
 
 };
