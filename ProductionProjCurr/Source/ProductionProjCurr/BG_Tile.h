@@ -11,8 +11,10 @@ class PRODUCTIONPROJCURR_API ABG_Tile : public AActor
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UStaticMeshComponent* staticMesh;
+
+
+	/*UPROPERTY(VisibleAnywhere, Category = "Components")
+	USceneComponent* rootComponent;*/
 	
 public:	
 	// Sets default values for this actor's properties
@@ -22,8 +24,26 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+	virtual void OnConstruction(const FTransform& transform) override;
+
+public:	//functions
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+
+public://variables
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UInstancedStaticMeshComponent* staticMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	float tileWidth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	int32 numberOfTiles;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+
+	float ySpawnOffset;
 
 };
