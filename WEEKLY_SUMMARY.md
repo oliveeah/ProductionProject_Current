@@ -4,7 +4,7 @@ This document provides a week-by-week summary of development progress on the Pro
 
 ---
 
-## Week 1: September 23 - September 28, 2025
+## Week 1: September 22 - September 28, 2025
 
 **Theme: Project Setup & Core Tool System Foundation**
 
@@ -63,7 +63,19 @@ This document provides a week-by-week summary of development progress on the Pro
 
 ---
 
-## Week 3: October 21 - October 23, 2025
+## Week 3: October 6 - October 12, 2025
+
+*No commits this week.*
+
+---
+
+## Week 4: October 13 - October 19, 2025
+
+*No commits this week.*
+
+---
+
+## Week 5: October 20 - October 26, 2025
 
 **Theme: Camera, Models & Card UI Polish**
 
@@ -86,7 +98,13 @@ This document provides a week-by-week summary of development progress on the Pro
 
 ---
 
-## Week 4: November 4 - November 6, 2025
+## Week 6: October 27 - November 2, 2025
+
+*No commits this week.*
+
+---
+
+## Week 7: November 3 - November 9, 2025
 
 **Theme: Player Animations & Interaction System**
 
@@ -109,23 +127,21 @@ This document provides a week-by-week summary of development progress on the Pro
   - Fixed interface display issues (cleared cache to resolve)
   - Interface is now FINALLY working!
 
-- **Interface Polymorphism** (Nov 6-8)
+- **Interface Polymorphism & Tool Refactoring** (Nov 6-8)
   - Interface now polymorphic and reacts differently based on interaction target
   - Tested interface in Blueprint (confirmed working)
   - Implemented tool subclasses to player Blueprint
   - Refactored tool base and child system
-
----
-
-## Week 5: November 8 - November 12, 2025
-
-**Theme: Code Cleanup & Board Game System**
-
-### Key Accomplishments:
-- **Code Cleanup & Merging** (Nov 8)
   - Deleted unused C++ files
   - Merged test branch into main (PR #1)
 
+---
+
+## Week 8: November 10 - November 16, 2025
+
+**Theme: Advanced Animations & Board Game System**
+
+### Key Accomplishments:
 - **Advanced Animation Systems** (Nov 10)
   - Worked on holding tool animation with blend pose
   - Animation now blending by pose correctly
@@ -139,6 +155,7 @@ This document provides a week-by-week summary of development progress on the Pro
   - Need to add hitbox to swing animation (noted for future work)
   - Added collision notify state to player
   - Organized and cleaned codebase
+  - Created spectator pawn
 
 - **Board Game System** (Nov 12)
   - Created camera pawn with FOV zooming functionality
@@ -153,11 +170,14 @@ This document provides a week-by-week summary of development progress on the Pro
 
 | Week | Date Range | Focus Area | Commits |
 |------|------------|------------|---------|
-| 1 | Sept 23-28 | Project Setup & Tools | ~15 |
+| 1 | Sept 22-28 | Project Setup & Tools | ~15 |
 | 2 | Sept 29 - Oct 5 | Card System & UI | ~10 |
-| 3 | Oct 21-23 | Camera & Card UI Polish | ~8 |
-| 4 | Nov 4-6 | Animations & Interactions | ~12 |
-| 5 | Nov 8-12 | Cleanup & Board Game | ~15 |
+| 3 | Oct 6-12 | - | 0 |
+| 4 | Oct 13-19 | - | 0 |
+| 5 | Oct 20-26 | Camera & Card UI Polish | ~8 |
+| 6 | Oct 27 - Nov 2 | - | 0 |
+| 7 | Nov 3-9 | Animations & Interactions | ~15 |
+| 8 | Nov 10-16 | Board Game System | ~15 |
 
 ---
 
