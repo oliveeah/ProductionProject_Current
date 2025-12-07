@@ -32,6 +32,11 @@ This document provides a week-by-week summary of development progress on the Pro
   - Re-imported mesh at 8x scale to prevent IK issues
   - Got idle animation working properly
 
+### Bugs Faced:
+- **Build errors from AttachToComponent**: Using `AttachToComponent` in constructor caused build errors - had to remove it
+- **AnimNotify tick not working**: `tickNotify` wasn't functioning as expected - discovered the issue was using AnimNotify instead of AnimNotifyState
+- **IK issues with mesh scale**: Mesh was causing IK problems - resolved by re-importing at 8x scale
+
 ---
 
 ## Week 2: September 29 - October 5, 2025
@@ -60,6 +65,9 @@ This document provides a week-by-week summary of development progress on the Pro
 - **Widget Toggle & Cleanup** (Oct 2)
   - Added ability to turn widget on and off
   - Removed junk files and cleaned up project
+
+### Bugs Faced:
+- **Widget initialization issues**: Widget logic wasn't working when placed in constructor or GameMode - had to move to BeginPlay in player class
 
 ---
 
@@ -95,6 +103,9 @@ This document provides a week-by-week summary of development progress on the Pro
 - **Final Polish** (Oct 23)
   - Refined fan animation behavior
   - Session wrap-up and finalization
+
+### Bugs Faced:
+- *No significant bugs reported this week*
 
 ---
 
@@ -135,6 +146,10 @@ This document provides a week-by-week summary of development progress on the Pro
   - Deleted unused C++ files
   - Merged test branch into main (PR #1)
 
+### Bugs Faced:
+- **Jump animation issues**: Jump animations weren't working correctly - required debugging and sorting
+- **Interface not appearing**: UI interface was not showing up despite correct implementation - resolved by clearing cache
+
 ---
 
 ## Week 8: November 10 - November 16, 2025
@@ -163,6 +178,11 @@ This document provides a week-by-week summary of development progress on the Pro
   - Created algorithm to spawn tiles in a grid
   - Completed tile creation system
   - Merged "To Board Game Test" branch (PR #3)
+
+### Bugs Faced:
+- **Animation blend pose affecting wrong arm**: Right arm was being affected by blend pose when it shouldn't - had to isolate and add socket
+- **Tool scale inheritance**: Tools weren't inheriting scale properly - required base class refactoring
+- **Missing hitbox on swing**: Swing animation lacked hitbox - noted as ongoing issue to fix
 
 ---
 
